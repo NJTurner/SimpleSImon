@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simpson's Simon</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+        /*title*/
+        @font-face {
+            font-family: Simpsonfont;
+            src: url(font/Simpsonfont.ttf);
+        }
+
+        #title {
+            font-family: Simpsonfont;
+            color: yellow;
+            font-size: 7.5em;
+
+        }
+
+        /*new game-start buttons*/
+        #start {
+            font-family: Simpsonfont;
+            color: yellow;
+            font-size: 2em;
+            background-color: #5bc0de;
+            margin-right: 15px;
+            bottom: 20em;
+            left: 20em;
+            float: left;
+        }
+
+        #start:hover {
+            background-color: #2e6da4;
+        }
+
+        #buttons {
+            margin-left: 225px;
+            margin-bottom: 10px;
+        }
+
+        #level {
+            font-family: Simpsonfont;
+            color: yellow;
+            font-size: 3em;
+        }
+
+        @keyframes bgColor {
+            0% {
+                fill: #E1B5D4;
+            }
+            100% {
+                fill: #E5568E;
+            }
+        }
+
+        @keyframes bgColorReversed {
+            0% {
+                background-color: #E5568E;
+            }
+            100% {
+                background-color: #E1B5D4;
+            }
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes speechAni {
+            to {
+                fill: #EA191D;
+                stroke: #000000;
+            }
+        }
+
+        @keyframes slogan {
+            to {
+                fill: #239AD5;
+                stroke: #000000;
+            }
+        }
+
+        @keyframes slogan2 {
+            to {
+                fill: #ED91B6;
+                stroke: #000000;
+            }
+        }
+
+        @keyframes slogan3 {
+            0% {
+                opacity: 0;
+            }
+            30% {
+                opacity: 0;
+            }
+            31% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes text1 {
+            0% {
+                opacity: 0;
+            }
+            80% {
+                opacity: 0;
+            }
+            81% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes text2 {
+            0% {
+                opacity: 0;
+            }
+            87% {
+                opacity: 0;
+            }
+            88% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes text3 {
+            0% {
+                opacity: 0;
+            }
+            95% {
+                opacity: 0;
+            }
+            96% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes eyeRotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* background section */
+        .bg-color-change {
+            animation: bgColor 0.3s alternate linear infinite;
+        }
+
+        .body-color-change {
+            animation: bgColorReversed 0.3s alternate linear infinite;
+        }
+
+        body {
+            background-color: #ED91B6;
+        }
+
+        .wrapper {
+            width: 100%;
+            height: 100%;
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container, .background {
+            width: 100%;
+            height: 100%;
+            display: block;
+            margin: auto;
+            background-color: #ED91B6;
+            position: relative;
+        }
+
+        /* Homer line drawing */
+        .homer, .speechbubble, .slogan, .textcontainer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+        }
+
+        .homer.color-me-in #collar1, .homer.color-me-in #collar2, .homer.color-me-in #tooth1, .homer.color-me-in #eye1, .homer.color-me-in #eye2 {
+            fill: white;
+        }
+
+        .homer.color-me-in #pupil1, .homer.color-me-in #pupil2 {
+            fill: black;
+            transform: rotate(30deg);
+            transform-origin: center;
+            animation: eyeRotate 0.2s 3s infinite;
+        }
+
+        .homer.color-me-in #headoutline {
+            fill: #FBE776;
+        }
+
+        .homer.color-me-in #mouth {
+            fill: #FFDFB8;
+        }
+
+        .draw {
+            stroke-dasharray: 2400;
+            stroke-dashoffset: 2400;
+            animation: dash 3s forwards;
+        }
+
+        /* Speech bubble */
+        .speech {
+            -webkit-animation: speechAni 0.5s 1s forwards;
+            animation: speechAni 0.5s 1s forwards;
+        }
+
+        .slogan {
+            -webkit-animation: slogan 2s 1.5s forwards;
+            animation: slogan 2s 1.5s forwards;
+        }
+
+        .slogan2 {
+            -webkit-animation: slogan2 2s 1.5s forwards;
+            animation: slogan2 2s 1.5s forwards;
+        }
+
+        .slogan3 {
+            opacity: 0;
+            -webkit-animation: slogan3 2s 1.5s forwards;
+            animation: slogan3 2s 1.5s forwards;
+        }
+
+        /* Simon Box */
+        #simon_background {
+            background-color: darkgray;
+            height: 625px;
+            width: 625px;
+            opacity: 0.5;
+            margin-left: 50px;
+        }
+
+        /* Squares */
+
+        .square {
+            height: 300px;
+            width: 300px;
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+        }
+
+        .square > img {
+            position: absolute;
+            top: 50%;
+            min-height: 100%;
+            display: block;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            min-width: 100%;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .homer-square {
+            bottom: 43.75em;
+            background-color: green;
+            left: 4.5em;
+        }
+
+        .homer-square:hover {
+            background-color: #2b542c;
+        }
+
+        .marge-square {
+            bottom: 43.75em;
+            left: 4.5em;
+            background-color: red;
+        }
+
+        .marge-square:hover {
+            background-color: darkred;
+        }
+
+        .lisa-square {
+            bottom: 22em;
+            right: 39em;
+            background-color: yellow;
+        }
+
+        .lisa-square:hover {
+            background-color: gold;
+        }
+
+        .bart-square {
+            bottom: 22em;
+            right: 39em;
+            background-color: blue;
+        }
+
+        .bart-square:hover {
+            background-color: darkblue;
+        }
+
+        #dialog {
+            position: absolute;
+        }
+
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="container">
+        <div class="background body-color-change">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560">
+                <polygon id="one" class="bg-color-change" fill="#E1B5D4" stroke="#000001" stroke-miterlimit="10"
+                         points="703.3,-38.9 788.1,316.6 870,-38.9"></polygon>
+                <polygon id="two" class="bg-color-change" fill="#E1B5D4" stroke="#000001" stroke-miterlimit="10"
+                         points="786.7,310.7 990.2,58 990.2,212.7"></polygon>
+                <polygon id="three" class="bg-color-change" fill="#E1B5D4" stroke="#000001" stroke-miterlimit="10"
+                         points="786.7,310.7 990.2,310.7 990.2,408"></polygon>
+                <polygon id="four" class="bg-color-change" fill="#E1B5D4" stroke="#000001" stroke-miterlimit="10"
+                         points="990.2,484 786.7,310.7 960,602"></polygon>
+                <polygon id="five" class="bg-color-change" fill="#E1B5D4" stroke="#000001" stroke-miterlimit="10"
+                         points="786.7,310.7 750.7,598.9 854.7,598.9"></polygon>
+                <polygon id="six" class="bg-color-change" fill="#E1B5D4" stroke="#000001" stroke-miterlimit="10"
+                         points="473.3,598.9 784,310.7 643.3,598.9"></polygon>
+                <polygon id="seven" class="bg-color-change" fill="#E1B5D4" stroke="#000001" stroke-miterlimit="10"
+                         points="-3.3,612.7 786.7,310.7 -30.2,196"></polygon>
+                <polygon id="eight" class="bg-color-change" fill="#E1B5D4" stroke="#000001" stroke-miterlimit="10"
+                         points="162.7,-38.9 784,310.7 492.7,-38.9"></polygon>
+            </svg>
+        </div>  <!-- end background -->
+
+        <div class="homer">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560">
+
+                <path id="collar2" class="draw" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-miterlimit="10" d="
+            M788.7,506l13,27c0,0,13.7,2.3,22,0c8.3-2.3,11.7-4.7,12.3-6.7s0-40,0-40"></path>
+                <path id="collar1" class="draw" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-miterlimit="10" d="
+            M741.7,498v30c0,0,3,7,11.7,6.7c8.7-0.3,12.3-0.7,14-9.7c1.7-9,4-19,4-19"></path>
+                <path id="headoutline" class="draw" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-miterlimit="10" d="
+M885.7,374.2c-1.8-10.8-8.2-16.3-16-18.7c-7.8-2.3-12.8,1.7-12.8,1.7s2.3-127.2-1-137.2c-3.3-10-11.2-48.7-74.3-52.3
+            c-63.2-3.7-72.3,56.5-72.3,56.5l-1,45.8l-0.3,2c-16.5,3.2-28.9,17.5-28.9,34.8c0,13.9,8,25.8,19.7,31.7l0,0.2
+            c0,0-8.5,4.7-11.3,19.7c-2.8,15,8.3,19.7,8.3,19.7l89.2-0.5c18.7,1,28,11.7,28,11.7c28.5,16.8,22.3,60,19.5,78.2
+            c-2.8,18.2-12.5,24.2-12.5,24.2s7.7,3.2,16.2-6s19.5-52.8,20.8-58.8c1.3-6,1.7-24,1.7-24C875.8,403.8,887.5,385,885.7,374.2z"></path>
+
+                <path id="mouth" class="draw" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-miterlimit="10" d="
+        M812.8,389.2c0,0-9.3-10.7-28-11.7l-83.1,0.5c-0.1,1.8-0.2,3-0.2,3.2c-1.6,4-5.2,13.7-5.4,25.3c0,0-1.7,4.5-5,10.2
+        c-3.3,5.7-0.6,0.8-0.6,0.8s-4.3,5,0.9,9.9c5.2,4.9,16.8,10.7,16.8,10.7l45.3-0.4c0,0-0.6,0.8,10.5-3.3c11.1-4.1,18.5-6.1,18.5-6.1
+        s8.5-1.9,14.3,0c5.8,1.9,9.3,5.9,10.7,9.1c1.3,3.2,0,13.8,0,13.8s-0.8,11.1-8,15.7c-7.2,4.6-24.5,6.8-24.5,6.8l-34.4-0.3
+        c0,0-4.2-1.6-6.3-4.6c-2.1-3-5.4-4.8-7.4-1.3c-2,3.6-3.9,5.8-1.2,10.6s10,14.2,16.5,19.2s20.3,7.7,28.6,8.3
+        c8.3,0.7,22.7-0.4,22.7-0.4s16.6-2.9,24.1-11.3c0,0,0.8-0.8,2.2-2.1c0-0.1-0.1-0.1-0.1-0.1s0.3-0.2,0.9-0.7
+        c0.6-0.5,1.2-1.1,1.9-1.8c3.1-3.2,7.8-9.9,9.6-21.7C835.2,449.2,841.3,406,812.8,389.2z"></path>
+
+                <path id="tooth1" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-miterlimit="10" d="M730.3,437l0.9,28.9c0,0,5.9,6.5,9.4,7.5s34.4,0.3,34.4,0.3s38.7,1.9,32.8-35.3c0,0-7.9-19.1-34.3-7.3l-20,6.6
+        L730.3,437z"></path>
+
+                <path id="tooth2" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-miterlimit="10" d="M752.7, 439.2, 755.7, 472"></path>
+
+                <path id="tooth3" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-miterlimit="10" d="M774.3, 432, 778.2, 472"></path>
+
+                <path id="tooth3" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-miterlimit="10" d="M792.8, 428.3, 796, 467"></path>
+
+                <path id="ear" class="draw" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-miterlimit="10" d="
+            M852.7,373.8c0,0,22.3-23,21.4,8.6"></path>
+
+                <path id="hair1" class="draw" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-miterlimit="10" d="
+        M746,172c0,0,0.3-28.3,25-26.7c24.7,1.7,25.3,31,25.3,31"></path>
+
+                <path id="hair2" class="draw" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-miterlimit="10" d="
+        M769.7,166.1c0,0,3.4-24.1,29-20.1s21,35.6,21,35.6"></path>
+
+                <path id="hair3" class="draw" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-miterlimit="10" d="
+            M832.3,348.7 842.7,328.3 856.3,348.7 869.3,329.7 877,348.7      "></path>
+
+                <path id="eye1" class="draw" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-miterlimit="10" d="M821.8,306.3c0,23.1-18.2,41.8-40.7,41.8s-40.7-18.7-40.7-41.8c0-9.4,3-18.2,8.2-25.2c7.4-10.1,19.2-16.7,32.5-16.7
+            C803.6,264.5,821.8,283.2,821.8,306.3z"></path>
+
+                <path id="eye2" class="draw" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-miterlimit="10" d="
+            M739.3,306.8c0-7,2.1-13.6,5.6-19.1c-6.4-9.8-17.5-16.4-30.1-16.4c-19.8,0-35.8,15.9-35.8,35.4s16,35.4,35.8,35.4
+            c12.7,0,23.8-6.5,30.1-16.4C741.3,320.4,739.3,313.8,739.3,306.8z"></path>
+
+                <path id="pupil1" class="draw" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-miterlimit="10"
+                      d="M768.2,308.5c0,0-1.2-28.7,29.5-16.2c0,0-21,20.7,7.5,19.5c0,0-4.7,23.2-29,11l6.3-13.3L768.2,308.5z"></path>
+
+                <path id="pupil2" class="draw" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-miterlimit="10"
+                      d="M697.3,307.4c0,0-1-25.4,26.1-14.3c0,0-18.6,18.3,6.6,17.3c0,0-4.1,20.5-25.7,9.7l5.6-11.8L697.3,307.4z"></path>
+
+
+            </svg>
+        </div>
+
+        <div class="speechbubble">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560">
+                <path class="bubble" fill="#7CCDE4" stroke="#000000" stroke-width="3" stroke-linejoin="round"
+                      stroke-miterlimit="10" d="M557.3,279
+        c0,0,84.7-6.3,100.7,32.5v117.3l33,28h-34.2l-1.5,13.5c0,0,2,29.8-109.5,28.5c0,0-69.3-2.7-79.5-26.8V309.7
+        C466.3,309.7,466.7,281.2,557.3,279z"></path>
+
+                <polygon class="speech" fill="none" stroke="none" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round" stroke-miterlimit="10" points="
+            517.6,315 525.9,315 505.4,363.6 495.9,363       "></polygon>
+
+                <polygon class="speech" fill="none" stroke="none" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round" stroke-miterlimit="10" points="
+            540.3,316.1 547.5,316.1 547.5,361.5 539.8,361.5         ">>
+                </polygon>
+
+                <polygon class="speech" fill="none" stroke="none" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round" stroke-miterlimit="10" points="
+            567.1,333.6 567.1,315 603.3,315 583,363.6 573.8,363.6 591.9,321.9 574.4,321.5 574.4,334         "></polygon>
+
+                <rect class="speech" x="614.1" y="333.3" fill="none" stroke="none" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" width="27.9"
+                      height="7.9"></rect>
+
+                <polygon class="speech" fill="none" stroke="none" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round" stroke-miterlimit="10" points="
+            478.9,419 478.9,400.5 515.3,400.5 494.9,448.9 485.3,448.9 503.5,407.3 485.8,406.6 485.6,419.6       "></polygon>
+
+                <rect class="speech" x="521" y="412.8" fill="none" stroke="none" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-miterlimit="10" width="6.6" height="15.1"></rect>
+
+                <rect class="speech" x="538.1" y="399" fill="none" stroke="none" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-miterlimit="10" width="8.1" height="46.3"></rect>
+
+                <rect class="speech" x="559.3" y="417.9" fill="none" stroke="none" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" width="27.5"
+                      height="7.9"></rect>
+
+                <rect class="speech" x="595.6" y="400.5" fill="none" stroke="none" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" width="10.4"
+                      height="16.6"></rect>
+
+                <polygon class="speech" fill="none" stroke="none" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round" stroke-miterlimit="10" points="
+            595,432.9 624.8,418.8 624.8,428.4 595,442.1         "></polygon>
+
+                <polygon class="speech" fill="none" stroke="none" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round" stroke-miterlimit="10" points="
+            635.6,395.9 645.4,395.9 643.9,427.3 636.9,427.3         "></polygon>
+
+                <circle class="speech" fill="none" stroke="none" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-miterlimit="10" cx="641.1" cy="440.1" r="4.6"></circle>
+
+            </svg>
+        </div>
+
+        <div class="slogan">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560">
+                <polygon class="slogan" fill="none" stroke="none" stroke-width="3" stroke-linecap="round"
+                         stroke-linejoin="round" stroke-miterlimit="10" points="
+            830.5,41 846.1,35.9 846.1,73.9 861.8,52.4 874.3,60.5 846.9,101.1 829.8,107.9        "></polygon>
+
+                <polygon class="slogan" fill="none" stroke="none" stroke-width="3" stroke-linecap="round"
+                         stroke-linejoin="round" stroke-miterlimit="10" points="
+            797.6,51.3 813.8,45.8 813.8,111.3 797.6,117.9       "></polygon>
+
+                <polyline class="slogan" fill="none" stroke="none" stroke-width="3" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-miterlimit="10" points="
+            719.3,79.4 777.5,57.4 778,126.5 719.3,148.8 719.3,129.3 759.9,114 760,79.5 719.3,94.9 719.3,80      "></polyline>
+
+                <ellipse class="slogan" fill="none" stroke="none" stroke-width="3" stroke-linecap="round"
+                         stroke-linejoin="round" stroke-miterlimit="10" cx="649.6" cy="106.1" rx="20.8"
+                         ry="20.4"></ellipse>
+
+                <ellipse class="slogan2" fill="none" stroke="none" stroke-width="3" stroke-linecap="round"
+                         stroke-linejoin="round" stroke-miterlimit="10" cx="650" cy="105.9" rx="10.1"
+                         ry="9.9"></ellipse>
+
+                <polygon class="slogan" fill="none" stroke="none" stroke-width="3" stroke-linejoin="round"
+                         stroke-miterlimit="10" points="573.4,131
+            589.8,125.5 589.8,191.1 573.4,196.8         "></polygon>
+
+                <polygon class="slogan" fill="none" stroke="none" stroke-width="3" stroke-linejoin="round"
+                         stroke-miterlimit="10" points="598,122.1
+            613.5,116.8 653.8,170.4 637.8,176.6         "></polygon>
+
+                <polygon class="slogan" fill="none" stroke="none" stroke-width="3" stroke-linejoin="round"
+                         stroke-miterlimit="10" points="507.1,156.3
+            558.8,136 541.4,175.8 560.6,201.4 547.6,208.3 533.9,190.6 522.4,216.3 502.5,224.8 530,163.1 507,171.4       "></polygon>
+
+                <polygon class="slogan" fill="none" stroke="none" stroke-width="3" stroke-linecap="round"
+                         stroke-linejoin="round" stroke-miterlimit="10" points="
+            675.6,24.6 710.4,10.8 710.4,25.9 675.6,39.8         "></polygon>
+
+                <polygon class="slogan" fill="none" stroke="none" stroke-width="3" stroke-linejoin="round"
+                         stroke-miterlimit="10" points="620.5,18.4
+            671.1,-1.5 635.4,79 615.1,87.6 631,53.8 622.1,47 617.8,54.6 606.4,44.1      "></polygon>
+
+                <polygon class="slogan2" fill="none" stroke="none" stroke-width="3" stroke-linecap="round"
+                         stroke-linejoin="round" stroke-miterlimit="10"
+                         points="628.1,35 631.8,29 643.3,25.3 636.8,41.3       "></polygon>
+
+                <polygon class="slogan" fill="none" stroke="none" stroke-width="3" stroke-linejoin="round"
+                         stroke-miterlimit="10" points="552.1,43
+            603.9,22.3 586.8,61.5 586.4,62.6 605.8,88 592.5,94.6 578.4,78.3 567,103.9 547.3,111.8 575.6,49.5 552.5,57.9         "></polygon>
+
+                <rect class="slogan3" x="496.7" y="56.8" fill="#239AD5" stroke="#000000" stroke-width="3"
+                      stroke-linejoin="round" stroke-miterlimit="10" width="39.8" height="14.3"></rect>
+
+                <rect class="slogan3" x="496.7" y="79.7" fill="#239AD5" stroke="#000000" stroke-width="3"
+                      stroke-linejoin="round" stroke-miterlimit="10" width="33.5" height="14.3"></rect>
+
+                <rect class="slogan3" x="499.5" y="101.8" fill="#239AD5" stroke="#000000" stroke-width="3"
+                      stroke-linejoin="round" stroke-miterlimit="10" width="39.3" height="13.8"></rect>
+
+                <polygon class="slogan" fill="none" stroke="none" stroke-width="3" stroke-linecap="round"
+                         stroke-linejoin="round" stroke-miterlimit="10" points="
+        672.4,122 707,107.9 707,123.1 672.4,136.9   "></polygon>
+
+            </svg>
+        </div>
+
+        <div class="textcontainer">
+            <h1 id="title">Simpsons Simon</h1>
+            <div id="buttons">
+                <button id="start">Start Game!</button>
+                <h2 id="level">Level : 0</h2>
+            </div>
+            <div id="simon_background"></div>
+            <button type="submit" class="square homer-square" id="1">
+                <img src="img/homer1.png"></button>
+            <button type="submit" class="square marge-square" id="2">
+                <img src="img/marge1.png"></button>
+            <button type="submit" class="square lisa-square" id="3">
+                <img src="img/lisa1.png"></button>
+            <button type="submit" class="square bart-square" id="4">
+                <img src="img/bart1.png"></button>
+            <div id="dialog" title="Basic dialog">
+                <img id="gameover" src="img/gameoverhomer.jpg" alt="Game Over Homer" hidden/>
+            </div>
+            <!--<div id="flashsimpsons">-->
+            <!--<img src="img/homerflash.png">-->
+            <!--<img src="img/margeflash.png">-->
+            <!--<img src="img/lisaflash.png">-->
+            <!--<img src="img/bartflash.png">-->
+            <!--</div>-->
+        </div>
+    </div><!-- end container -->
+</div><!-- end wrapper -->
+<script src="css/jquery-3.1.1.js"></script>
+<script src="css/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script> <!--Wallpaper JS -->
+setTimeout(function () {
+    $('.homer').addClass('color-me-in');
+}, 3000);
+</script>
+<script>
+    //functions
+    var pattern = [];
+    var playerPattern = [];
+    var checker = false;
+    var level = 0;
+
+    function addPattern() { //function that adds initial random # for pattern
+        var patternValue = random(1, 4);
+        pattern.push(patternValue);
+    }
+    console.log(pattern);
+
+    function playSimon() {  //times out the flashes and the timing between
+        for (var i = 0; i < pattern.length; i++) {
+            var timeDelay = i * 600;
+            setTimeout(flashSquare, timeDelay);
+        }
+    }
+
+    function flashSquare() { //activates the flash animations
+        var item = pattern.pop();
+        checker = true;
+        $('#' + item).animate({//removes first simpson from array
+            opacity: 0.2
+        }, 200).animate({
+            opacity: 1
+        }, 100);
+        //animation takes 300 ms
+
+        playerPattern.push(item);
+        // take the simpson removed from pattern and add it to player pattern
+        if (pattern.length <= 0) {
+            createClicks();
+            console.log(playerPattern);
+        }
+    }
+
+    function createClicks() { //clicks
+        $(':submit').click(function () {
+            var item = playerPattern.push();
+            var simpsonID = $(this).attr('id');
+            $(this).animate({ //checks if they selected the correct simpson
+                opacity: .2
+            }, 200).animate({
+                opacity: 1
+            }, 100);
+
+            // if true take simpson from used pattern and add to pattern
+            if (item == simpsonID) {
+                pattern.push(item);
+                if (playerPattern.length <= 0) {
+                    level++;
+                    $('#level').html('Level: ' + level);
+
+                    removeClicks();
+                    //user clicks were correct, add a new simpson to next pattern
+                    addPattern();
+                    // playPattern();
+                    setTimeout(playSimon, 800);
+                }
+            } else {//GAME OVER, reset the arrays
+                checker = false;
+                pattern = [];
+                playerPattern = [];
+                gameOver();
+                removeClicks();
+                reset();
+            }
+        });
+    }
+
+    //GAME OVER Function
+    function gameOver() {
+        $("#dialog").dialog({
+            autoOpen: false,
+            resizable: false,
+            modal: true,
+            width: 775,
+            height: 500,
+            option: "closeOnEscape",
+            draggable: false,
+            overlay: "background-color: red; opacity: 0.5"
+        });
+        $("#gameover").removeAttr("hidden");
+        $("#dialog").dialog("open");
+
+    }
+
+    function removeClicks() {//removes event listener clicks from the buttons, resetting them
+        $('.square').unbind();
+    }
+
+    function startGame() {
+        addPattern();
+        playSimon();
+    }
+
+    function reset() {
+        level = 0;
+        $('#level').html('Level: ' + level);
+    }
+
+    $('#start').click(function () {
+        if (checker === false) {
+            startGame();
+        }
+    });
+
+    function random(min, max) {
+        return Math.round(Math.random() * (max - min)) + min;
+    }
+    ;
+
+    //Start button disappears until the game over screen pops.  SET TO REAPPEAR AT END OF GAME
+    $("#start").click(function () {
+        $("#start").hide();
+        $("#start").show(2000);
+        /*2 sec time*/
+    });
+
+
+    //code for AUDIO FILES.  switch classes play and pause
+    $(document).ready(function () {
+        var audioElement = document.createElement('audio');
+        audioElement.setAttribute('src', 'audio.mp3');
+        audioElement.setAttribute('autoplay', 'autoplay');
+        //audioElement.load()
+
+        $.get();
+
+        audioElement.addEventListener("load", function () {
+            audioElement.play();
+        }, true);
+
+        $('.play').click(function () {
+            audioElement.play();
+        });
+
+        $('.pause').click(function () {
+            audioElement.pause();
+        });
+    });
+</script>
+<script type="text/javascript">
+    // <![CDATA[
+    var colour = "#7CCDE4";
+    var sparkles = 50;
+    var x = ox = 400;
+    var y = oy = 300;
+    var swide = 800;
+    var shigh = 600;
+    var sleft = sdown = 0;
+    var tiny = new Array();
+    var star = new Array();
+    var starv = new Array();
+    var starx = new Array();
+    var stary = new Array();
+    var tinyx = new Array();
+    var tinyy = new Array();
+    var tinyv = new Array();
+
+    window.onload = function () {
+        if (document.getElementById) {
+            var i, rats, rlef, rdow;
+            for (i = 0; i < sparkles; i++) {
+                rats = createDiv(3, 3);
+                rats.style.visibility = "hidden";
+                document.body.appendChild(tiny[i] = rats);
+                starv[i] = 0;
+                tinyv[i] = 0;
+                rats = createDiv(5, 5);
+                rats.style.backgroundColor = "transparent";
+                rats.style.visibility = "hidden";
+                rlef = createDiv(1, 5);
+                rdow = createDiv(5, 1);
+                rats.appendChild(rlef);
+                rats.appendChild(rdow);
+                rlef.style.top = "2px";
+                rlef.style.left = "0px";
+                rdow.style.top = "0px";
+                rdow.style.left = "2px";
+                document.body.appendChild(star[i] = rats);
+            }
+            set_width();
+            sparkle();
+        }
+    }
+
+    function sparkle() {
+        var c;
+        if (x != ox || y != oy) {
+            ox = x;
+            oy = y;
+            for (c = 0; c < sparkles; c++) if (!starv[c]) {
+                star[c].style.left = (starx[c] = x) + "px";
+                star[c].style.top = (stary[c] = y) + "px";
+                star[c].style.clip = "rect(0px, 5px, 5px, 0px)";
+                star[c].style.visibility = "visible";
+                starv[c] = 50;
+                break;
+            }
+        }
+        for (c = 0; c < sparkles; c++) {
+            if (starv[c]) update_star(c);
+            if (tinyv[c]) update_tiny(c);
+        }
+        setTimeout("sparkle()", 40);
+    }
+
+    function update_star(i) {
+        if (--starv[i] == 25) star[i].style.clip = "rect(1px, 4px, 4px, 1px)";
+        if (starv[i]) {
+            stary[i] += 1 + Math.random() * 3;
+            if (stary[i] < shigh + sdown) {
+                star[i].style.top = stary[i] + "px";
+                starx[i] += (i % 5 - 2) / 5;
+                star[i].style.left = starx[i] + "px";
+            }
+            else {
+                star[i].style.visibility = "hidden";
+                starv[i] = 0;
+            }
+        }
+        else {
+            tinyv[i] = 50;
+            tiny[i].style.top = (tinyy[i] = stary[i]) + "px";
+            tiny[i].style.left = (tinyx[i] = starx[i]) + "px";
+            tiny[i].style.width = "2px";
+            tiny[i].style.height = "2px";
+            star[i].style.visibility = "hidden";
+            tiny[i].style.visibility = "visible"
+        }
+    }
+
+    function update_tiny(i) {
+        if (--tinyv[i] == 25) {
+            tiny[i].style.width = "1px";
+            tiny[i].style.height = "1px";
+        }
+        if (tinyv[i]) {
+            tinyy[i] += 1 + Math.random() * 3;
+            if (tinyy[i] < shigh + sdown) {
+                tiny[i].style.top = tinyy[i] + "px";
+                tinyx[i] += (i % 5 - 2) / 5;
+                tiny[i].style.left = tinyx[i] + "px";
+            }
+            else {
+                tiny[i].style.visibility = "hidden";
+                tinyv[i] = 0;
+            }
+        }
+        else tiny[i].style.visibility = "hidden";
+    }
+
+    document.onmousemove = mouse;
+    function mouse(e) {
+        set_scroll();
+        y = (e) ? e.pageY : event.y + sdown;
+        x = (e) ? e.pageX : event.x + sleft;
+    }
+
+    function set_scroll() {
+        if (typeof(self.pageYOffset) == "number") {
+            sdown = self.pageYOffset;
+            sleft = self.pageXOffset;
+        }
+        else if (document.body.scrollTop || document.body.scrollLeft) {
+            sdown = document.body.scrollTop;
+            sleft = document.body.scrollLeft;
+        }
+        else if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)) {
+            sleft = document.documentElement.scrollLeft;
+            sdown = document.documentElement.scrollTop;
+        }
+        else {
+            sdown = 0;
+            sleft = 0;
+        }
+    }
+
+    window.onresize = set_width;
+    function set_width() {
+        if (typeof(self.innerWidth) == "number") {
+            swide = self.innerWidth;
+            shigh = self.innerHeight;
+        }
+        else if (document.documentElement && document.documentElement.clientWidth) {
+            swide = document.documentElement.clientWidth;
+            shigh = document.documentElement.clientHeight;
+        }
+        else if (document.body.clientWidth) {
+            swide = document.body.clientWidth;
+            shigh = document.body.clientHeight;
+        }
+    }
+
+    function createDiv(height, width) {
+        var div = document.createElement("div");
+        div.style.position = "absolute";
+        div.style.height = height + "px";
+        div.style.width = width + "px";
+        div.style.overflow = "hidden";
+        div.style.backgroundColor = colour;
+        return (div);
+    }
+    // ]]>
+</script> <!--Cursor-->
+</body>
+</html>
