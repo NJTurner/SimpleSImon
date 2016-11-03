@@ -314,7 +314,7 @@
         #dialog {
             position: absolute;
         }
-        
+
     </style>
 </head>
 <body>
@@ -547,14 +547,14 @@ M885.7,374.2c-1.8-10.8-8.2-16.3-16-18.7c-7.8-2.3-12.8,1.7-12.8,1.7s2.3-127.2-1-1
                 <h2 id="level">Level : 0</h2>
             </div>
             <div id="simon_background"></div>
-            <button id="1" type="submit" class="square homer-square btn btn-1 btn-1a" data-number="1">
-                <img src="img/homer1.png"></button>
-            <button id="2" type="submit" class="square marge-square btn btn-1 btn-1a" data-number="2">
-                <img src="img/marge1.png"></button>
-            <button id="3" type="submit" class="square lisa-square btn btn-1 btn-1a" data-number="3">
-                <img src="img/lisa1.png"></button>
-            <button id="4" type="submit" class="square bart-square btn btn-1 btn-1a" data-number="4">
-                <img src="img/bart1.png"></button>
+            <button id="homer" type="submit" class="square homer-square btn btn-1 btn-1a ci" data-number="1">
+                <img id="homerimage" src="img/homer1.png" value="homer"></button>
+            <button id="marge" type="submit" class="square marge-square btn btn-1 btn-1a ci" data-number="2">
+                <img id="margeimage" src="img/marge1.png" value="marge"></button>
+            <button id="lisa" type="submit" class="square lisa-square btn btn-1 btn-1a ci" data-number="3">
+                <img id="lisaimage" src="img/lisa1.png" value="lisa"></button>
+            <button id="bart" type="submit" class="square bart-square btn btn-1 btn-1a ci" data-number="4">
+                <img id=bartimage" src="img/bart1.png" value="bart"></button>
             <div id="dialog" title="GAME OVER!">
                 <img id="gameover" src="img/gameoverhomer.jpg" alt="Game Over Homer" hidden/>
             </div>
@@ -577,12 +577,13 @@ setTimeout(function () {
 </script>
 <script>
     //---------------------START GAME--------------------------------
+    //When called, resets level, hides the start button, and calls function startGame
     $('#start').click(function () {
         reset();
         $("#start").hide(); //hides start button on click
             startGame();
     });
-
+    //Function calls addPattern and startSimon
     function startGame() {
         addPattern();
         startSimon();
@@ -592,43 +593,42 @@ setTimeout(function () {
     var pattern = [];
     var level;
     var i = 0;
-    var dumbVariable = true;
+    var simonVariable = true;
 
-    function addPattern() { //function that adds initial random # for pattern
+    //function that adds initial random # for pattern
+    function addPattern() {
         var patternValue = random(1, 4);
         pattern.push(patternValue);
     }
 
-    function startSimon() {  //times out the flashes and the timing between
+    //times out the flashing between squares, calls flashSquare and checkClicks
+    function startSimon() {
         $.each(pattern, function(index, element) {
             var timeDelay = index * 600;
             setTimeout (function() {
                 flashSquare(element);
             }, timeDelay);
         });
-
-        createClicks();
+        checkClicks();
     }
 
-    function flashSquare(item) { //activates the flash animations
+    //activates and sets parameters for animations by using attribute data-numbers,
+    function flashSquare(item) {
         console.log(item);
-        $('#' + item).animate({
+        $('[data-number="' + item + '"]').animate({
             opacity: 0.2
-        }, 200).animate({
+        }, 300).animate({
             opacity: 1
-        }, 100);
-        //animation takes 3 seconds
-
+        }, 200);
+        //animation takes .5 seconds
     }
 
-    function createClicks() { //clicks
-        if (dumbVariable == true) {
+    //Keeps track of the initial pattern and the user clicks to see if they match, if they do, it adds a level, sets i=0,
+    // calls addPattern and continues with the game.  if the data is entered incorrectly it sets i = 0,and calls gameOver.
+    function checkClicks() {
+        if (simonVariable == true) {
             $('.square').click(function () {
                 var simpsonID = $(this).data('number');
-                console.log(i);
-
-                console.log(simpsonID);
-
                 if (simpsonID == pattern[i]) {
                     i++;
                 } else {
@@ -639,15 +639,15 @@ setTimeout(function () {
                     i = 0;
                     level++;
                     $('#level').html('Level: ' + level);
-//                    removeClicks();
                     addPattern();
                     setTimeout(startSimon, 800);
                 }
             });
         }
-        dumbVariable = false;
+        simonVariable = false;
     }
     //----------------------------GAME OVER Function----------------------------
+    //When called it pops a image modal, shows the start button, clears the pattern, shows highest level achieved
     function gameOver() {
         $("#dialog").dialog({
             autoOpen: false,
@@ -663,47 +663,101 @@ setTimeout(function () {
         $("#dialog").dialog("open");
         $("#start").show(2000);//start button reappears when game over
         pattern = [];
-//        removeClicks();
-        startSimon();
+        level = level - 1;
     }
 
-//    function removeClicks() {//removes event listener clicks from the buttons, resetting them
-//        $('.square').unbind();
-//    }
 
-    //------------------------RESET LEVEL----------------------------
+    //------------------------RESET LEVEL------------------------------------
+    //Changes the Level back to 1 when called.
     function reset() {
         level = 1;
         pattern = [];
         $('#level').html('Level: ' + level);
     }
 
-    //------------------------RANDOM NUMBER GENERATOR---------------------
+    //------------------------RANDOM NUMBER GENERATOR--------------------------
     function random(min, max) {
         return Math.round(Math.random() * (max - min)) + min;
     }
 
-    //code for AUDIO FILES.  switch classes play and pause
-//    $(document).ready(function () {
-//        var audioElement = document.createElement('audio');
-//        audioElement.setAttribute('src', 'audio.mp3');
-//        audioElement.setAttribute('autoplay', 'autoplay');
-//        //audioElement.load()
-//
-//        $.get();
-//
-//        audioElement.addEventListener("load", function () {
-//            audioElement.play();
-//        }, true);
-//
-//        $('.play').click(function () {
-//            audioElement.play();
-//        });
-//
-//        $('.pause').click(function () {
-//            audioElement.pause();
-//        });
-//    });
+    //---------------------------AUDIO---------------------------------------
+    //Click events for each character audio function.  Looking to simplify or consolidate
+    //HOMER
+    $(document).ready(function () {
+        var sound = document.createElement("audio");
+        sound.src = "audio/homer.wav";
+        sound.volume = 0.10;
+        sound.autoPlay = false;
+        sound.preLoad = true;
+
+        $("#homer").click(function () {
+            sound.play();
+        });
+    });
+    //MARGE
+    $(document).ready(function () {
+        var sound = document.createElement("audio");
+        sound.src = "audio/marge.wav";
+        sound.volume = 0.10;
+        sound.autoPlay = false;
+        sound.preLoad = true;
+
+        $("#marge").click(function () {
+            sound.play();
+        });
+    });
+    //LISA
+    $(document).ready(function () {
+        var sound = document.createElement("audio");
+        sound.src = "audio/lisa.wav";
+        sound.volume = 0.10;
+        sound.autoPlay = false;
+        sound.preLoad = true;
+
+        $("#lisa").click(function () {
+            sound.play();
+        });
+    });
+    //BART
+    $(document).ready(function () {
+        var sound = document.createElement("audio");
+        sound.src = "audio/bart.wav";
+        sound.volume = 0.10;
+        sound.autoPlay = false;
+        sound.preLoad = true;
+
+        $("#bart").click(function () {
+            sound.play();
+        });
+    });
+
+    //START GAME
+    $(document).ready(function () {
+        var sound = document.createElement("audio");
+        sound.src = "audio/startbutton.wav";
+        sound.volume = 0.10;
+        sound.autoPlay = false;
+        sound.preLoad = true;
+
+        $("#start").click(function () {
+            sound.play();
+        });
+    });
+
+    //----------------------------FLASH/CLICK IMAGES----------------------------------
+    //Attempt to change the animations of squares to a separate image.
+    $('#homer').click(function () {
+        var image = $("#homerimage");
+        image.fadeOut('fast', function () {
+            image.attr('src', 'img/homerflash.png');
+            image.fadeIn('fast');
+            image.fadeOut('fast', function () {
+                image.attr('src', 'img/homer1.png');
+                image.fadeIn('fast');
+            });
+        });
+    });
+    
 </script>
 <script type="text/javascript">
     // <![CDATA[
