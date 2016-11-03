@@ -6,20 +6,18 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <style>
-        /*title*/
+        /*------------------------------Title-------------------------------------*/
         @font-face {
             font-family: Simpsonfont;
             src: url(font/Simpsonfont.ttf);
         }
-
         #title {
             font-family: Simpsonfont;
             color: yellow;
             font-size: 7.5em;
-
         }
 
-        /*new game-start buttons*/
+        /*------------------------------Start Button-------------------------------------*/
         #start {
             font-family: Simpsonfont;
             color: yellow;
@@ -30,22 +28,20 @@
             left: 20em;
             float: left;
         }
-
         #start:hover {
             background-color: #2e6da4;
         }
-
         #buttons {
             margin-left: 225px;
             margin-bottom: 10px;
         }
-
+        /*------------------------------Level Counter-------------------------------------*/
         #level {
             font-family: Simpsonfont;
             color: yellow;
             font-size: 3em;
         }
-
+        /*--------------------Keyframes Styling from Background----------------------------*/
         @keyframes bgColor {
             0% {
                 fill: #E1B5D4;
@@ -160,7 +156,7 @@
             }
         }
 
-        /* background section */
+        /*------------------------------Background CSS-------------------------------------*/
         .bg-color-change {
             animation: bgColor 0.3s alternate linear infinite;
         }
@@ -223,7 +219,7 @@
             animation: dash 3s forwards;
         }
 
-        /* Speech bubble */
+        /*------------------------------Speech Bubble-------------------------------------*/
         .speech {
             -webkit-animation: speechAni 0.5s 1s forwards;
             animation: speechAni 0.5s 1s forwards;
@@ -245,7 +241,7 @@
             animation: slogan3 2s 1.5s forwards;
         }
 
-        /* Simon Box */
+        /*------------------------------Simon Box-------------------------------------*/
         #simon_background {
             background-color: darkgray;
             height: 625px;
@@ -254,8 +250,7 @@
             margin-left: 50px;
         }
 
-        /* Squares */
-
+        /*------------------------------Squares-------------------------------------*/
         .square {
             height: 300px;
             width: 300px;
@@ -315,14 +310,15 @@
         .bart-square:hover {
             background-color: darkblue;
         }
-
+        /*------------------------------Game Over Modal-------------------------------------*/
         #dialog {
             position: absolute;
         }
-
+        
     </style>
 </head>
 <body>
+<!--------------------------------Start Insane HTML code------------------------------------->
 <div class="wrapper">
     <div class="container">
         <div class="background body-color-change">
@@ -542,7 +538,8 @@ M885.7,374.2c-1.8-10.8-8.2-16.3-16-18.7c-7.8-2.3-12.8,1.7-12.8,1.7s2.3-127.2-1-1
 
             </svg>
         </div>
-
+        <!--------------------------------End Insane HTML code------------------------------------->
+        <!--------------------------------Start Simon HTML code------------------------------------->
         <div class="textcontainer">
             <h1 id="title">Simpsons Simon</h1>
             <div id="buttons">
@@ -550,15 +547,15 @@ M885.7,374.2c-1.8-10.8-8.2-16.3-16-18.7c-7.8-2.3-12.8,1.7-12.8,1.7s2.3-127.2-1-1
                 <h2 id="level">Level : 0</h2>
             </div>
             <div id="simon_background"></div>
-            <button type="submit" class="square homer-square" id="1">
+            <button id="1" type="submit" class="square homer-square btn btn-1 btn-1a" data-number="1">
                 <img src="img/homer1.png"></button>
-            <button type="submit" class="square marge-square" id="2">
+            <button id="2" type="submit" class="square marge-square btn btn-1 btn-1a" data-number="2">
                 <img src="img/marge1.png"></button>
-            <button type="submit" class="square lisa-square" id="3">
+            <button id="3" type="submit" class="square lisa-square btn btn-1 btn-1a" data-number="3">
                 <img src="img/lisa1.png"></button>
-            <button type="submit" class="square bart-square" id="4">
+            <button id="4" type="submit" class="square bart-square btn btn-1 btn-1a" data-number="4">
                 <img src="img/bart1.png"></button>
-            <div id="dialog" title="Basic dialog">
+            <div id="dialog" title="GAME OVER!">
                 <img id="gameover" src="img/gameoverhomer.jpg" alt="Game Over Homer" hidden/>
             </div>
             <!--<div id="flashsimpsons">-->
@@ -579,78 +576,78 @@ setTimeout(function () {
 }, 3000);
 </script>
 <script>
-    //functions
+    //---------------------START GAME--------------------------------
+    $('#start').click(function () {
+        reset();
+        $("#start").hide(); //hides start button on click
+            startGame();
+    });
+
+    function startGame() {
+        addPattern();
+        startSimon();
+    }
+
+    //-----------------------SIMON BASIC FUNCTIONS---------------------------
     var pattern = [];
-    var playerPattern = [];
-    var checker = false;
-    var level = 0;
+    var level;
+    var i = 0;
+    var dumbVariable = true;
 
     function addPattern() { //function that adds initial random # for pattern
         var patternValue = random(1, 4);
         pattern.push(patternValue);
     }
-    console.log(pattern);
 
-    function playSimon() {  //times out the flashes and the timing between
-        for (var i = 0; i < pattern.length; i++) {
-            var timeDelay = i * 600;
-            setTimeout(flashSquare, timeDelay);
-        }
+    function startSimon() {  //times out the flashes and the timing between
+        $.each(pattern, function(index, element) {
+            var timeDelay = index * 600;
+            setTimeout (function() {
+                flashSquare(element);
+            }, timeDelay);
+        });
+
+        createClicks();
     }
 
-    function flashSquare() { //activates the flash animations
-        var item = pattern.pop();
-        checker = true;
-        $('#' + item).animate({//removes first simpson from array
+    function flashSquare(item) { //activates the flash animations
+        console.log(item);
+        $('#' + item).animate({
             opacity: 0.2
         }, 200).animate({
             opacity: 1
         }, 100);
-        //animation takes 300 ms
+        //animation takes 3 seconds
 
-        playerPattern.push(item);
-        // take the simpson removed from pattern and add it to player pattern
-        if (pattern.length <= 0) {
-            createClicks();
-            console.log(playerPattern);
-        }
     }
 
     function createClicks() { //clicks
-        $(':submit').click(function () {
-            var item = playerPattern.push();
-            var simpsonID = $(this).attr('id');
-            $(this).animate({ //checks if they selected the correct simpson
-                opacity: .2
-            }, 200).animate({
-                opacity: 1
-            }, 100);
+        if (dumbVariable == true) {
+            $('.square').click(function () {
+                var simpsonID = $(this).data('number');
+                console.log(i);
 
-            // if true take simpson from used pattern and add to pattern
-            if (item == simpsonID) {
-                pattern.push(item);
-                if (playerPattern.length <= 0) {
+                console.log(simpsonID);
+
+                if (simpsonID == pattern[i]) {
+                    i++;
+                } else {
+                    i = 0;
+                    gameOver();
+                }
+                if (i == pattern.length) {
+                    i = 0;
                     level++;
                     $('#level').html('Level: ' + level);
-
-                    removeClicks();
-                    //user clicks were correct, add a new simpson to next pattern
+//                    removeClicks();
                     addPattern();
-                    // playPattern();
-                    setTimeout(playSimon, 800);
+                    setTimeout(startSimon, 800);
                 }
-            } else {//GAME OVER, reset the arrays
-                checker = false;
-                pattern = [];
-                playerPattern = [];
-                gameOver();
-                removeClicks();
-                reset();
-            }
-        });
+            });
+        }
+        dumbVariable = false;
     }
-
-    //GAME OVER Function
+    //----------------------------GAME OVER Function----------------------------
     function gameOver() {
         $("#dialog").dialog({
             autoOpen: false,
@@ -664,63 +661,49 @@ setTimeout(function () {
         });
         $("#gameover").removeAttr("hidden");
         $("#dialog").dialog("open");
-
+        $("#start").show(2000);//start button reappears when game over
+        pattern = [];
+//        removeClicks();
+        startSimon();
     }
 
-    function removeClicks() {//removes event listener clicks from the buttons, resetting them
-        $('.square').unbind();
-    }
+//    function removeClicks() {//removes event listener clicks from the buttons, resetting them
+//        $('.square').unbind();
+//    }
 
-    function startGame() {
-        addPattern();
-        playSimon();
-    }
-
+    //------------------------RESET LEVEL----------------------------
     function reset() {
-        level = 0;
+        level = 1;
+        pattern = [];
         $('#level').html('Level: ' + level);
     }
 
-    $('#start').click(function () {
-        if (checker === false) {
-            startGame();
-        }
-    });
-
+    //------------------------RANDOM NUMBER GENERATOR---------------------
     function random(min, max) {
         return Math.round(Math.random() * (max - min)) + min;
     }
-    ;
-
-    //Start button disappears until the game over screen pops.  SET TO REAPPEAR AT END OF GAME
-    $("#start").click(function () {
-        $("#start").hide();
-        $("#start").show(2000);
-        /*2 sec time*/
-    });
-
 
     //code for AUDIO FILES.  switch classes play and pause
-    $(document).ready(function () {
-        var audioElement = document.createElement('audio');
-        audioElement.setAttribute('src', 'audio.mp3');
-        audioElement.setAttribute('autoplay', 'autoplay');
-        //audioElement.load()
-
-        $.get();
-
-        audioElement.addEventListener("load", function () {
-            audioElement.play();
-        }, true);
-
-        $('.play').click(function () {
-            audioElement.play();
-        });
-
-        $('.pause').click(function () {
-            audioElement.pause();
-        });
-    });
+//    $(document).ready(function () {
+//        var audioElement = document.createElement('audio');
+//        audioElement.setAttribute('src', 'audio.mp3');
+//        audioElement.setAttribute('autoplay', 'autoplay');
+//        //audioElement.load()
+//
+//        $.get();
+//
+//        audioElement.addEventListener("load", function () {
+//            audioElement.play();
+//        }, true);
+//
+//        $('.play').click(function () {
+//            audioElement.play();
+//        });
+//
+//        $('.pause').click(function () {
+//            audioElement.pause();
+//        });
+//    });
 </script>
 <script type="text/javascript">
     // <![CDATA[
