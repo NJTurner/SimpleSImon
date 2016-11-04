@@ -1,15 +1,58 @@
-Just commit messages for now
+ ______  __  __    __  ______  ______  ______  __   __  ______           ______  __  __    __  ______  __   __
+/\  ___\/\ \/\ "-./  \/\  == \/\  ___\/\  __ \/\ "-.\ \/\  ___\         /\  ___\/\ \/\ "-./  \/\  __ \/\ "-.\ \
+\ \___  \ \ \ \ \-./\ \ \  _-/\ \___  \ \ \/\ \ \ \-.  \ \___  \        \ \___  \ \ \ \ \-./\ \ \ \/\ \ \ \-.  \
+ \/\_____\ \_\ \_\ \ \_\ \_\   \/\_____\ \_____\ \_\\"\_\/\_____\        \/\_____\ \_\ \_\ \ \_\ \_____\ \_\\"\_\
+  \/_____/\/_/\/_/  \/_/\/_/    \/_____/\/_____/\/_/ \/_/\/_____/         \/_____/\/_/\/_/  \/_/\/_____/\/_/ \/_/
+                                                                                                         / \ / \ / \
+                                                                                                        ( V | . | 3 )
+                                                                                                         \_/ \_/ \_/
+Welcome to SIMPSONS SIMON V.3.  This is a simple twist on the classic game, Simon, with a Simpsons theme.  Includes sound clips and images from the popular animated television
+series, The Simpsons.
 
-Adding all current files from simple_simpsons v.1, readme and git ignore.
-V.1 contains title, start button, level counter, simon squares, a modal game over alert, and a huge HTML background not created by myself, but looks really cool.  game HTML, CSS, and JS additions all on the same page, considering splitting them up into separate files for organizational sake.  Also added comments on most functions, but still cumbersome to explain
+Instructions:
 
-Current Issues:
-1)  playerPattern is sending its items back to pattern in the wrong order.
-2) After game over, clicking start button activates game over alert again, and will not restart the game
+Click Start Game Button to start the game, follow the sequence of the flashing Simpsons squares, and repeat the sequence by clicking on the corresponding squares!
+Every time you complete a sequence, the next level starts and another Simpson is added!  Be careful, if you click the wrong square, you'll get a GAME OVER!
 
-Future additions: working game,  audio on start click and square click, and game over.  Switching images for the flash instead of animation flash.
+You'll see your final score, and then restart the game by pressing start button again and enjoy!
 
-Added the HTML files, and all the CSS and JS files(underneath CSS folder,need to fix).
+On clicking the start button, and the Simpsons squares, you'll hear sound clips from all your favorite characters.  Enjoy a big flashing Mr. Sparkle background and
+a sparkle cursor effect.
 
-Includes images, audio and font files used or planned to be used.  images include initial simpsons images, flash images, and game over image,
 
+
+
+                                                     ___,------,
+             _,--.---.                         __,--'         /
+           ,' _,'_`._ \                    _,-'           ___,|
+          ;--'       `^-.                ,'        __,---'   ||
+        ,'               \             ,'      _,-'          ||
+       /                  \         _,'     ,-'              ||
+      :                    .      ,'     _,'                 |:
+      |                    :     `.    ,'                    |:
+      |           _,-      |       `-,'                      ::
+     ,'____ ,  ,-'  `.   , |,         `.                     : \
+     ,'    `-,'       ) / \/ \          \                     : :
+     |      _\   o _,-'    '-.           `.                    \ \
+      `o_,-'  `-,-' ____   ,` )-.______,'  `.                   : :
+       \-\    _,---'    `-. -'.\  `.  /     `.                  \  \
+        / `--'             `.   \   \:        \                  \,.\
+       (              ____,  \  |    \\        \                 :\ \\
+        )         _,-'    `   | |    | \        \                 \\_\\
+       /      _,-'            | |   ,'-`._      _\                 \,'
+       `-----' |`-.           ;/   (__ ,' `-. _;-'`\           _,--'
+     ,'        |   `._     _,' \-._/  Y    ,-'      \      _,-'
+    /        _ |      `---'    :,-|   |    `     _,-'\_,--'   \
+   :          `|       \`-._   /  |   '     `.,-' `._`         \
+   |           _\_    _,\/ _,-'|                     `-._       \
+   :   ,-         `.-'_,--'    \                         `       \
+   | ,'           ,--'      _,--\           _,                    :
+    )         .    \___,---'   ) `-.____,--'                      |
+   _\    .     `    ||        :            \                      ;
+ ,'  \    `.    )--' ;        |             `-.                  /
+|     \     ;--^._,-'         |                `-._            _/_\
+\    ,'`---'                  |                    `--._____,-'_'  \
+ \_,'                         `._                          _,-'     `
+                            ,-'  `---.___           __,---'
+                          ,'             `---------'
+                        ,'
