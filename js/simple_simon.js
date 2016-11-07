@@ -2,16 +2,18 @@
  * Created by NicholasTurner on 11/4/16.
  */
 'use strict';
-
+//----------------------JS for Background-------------------------------------
 setTimeout(function () {
     $('.homer').addClass('color-me-in');
 }, 3000);
 
-//---------------------START GAME--------------------------------
+//---------------------START GAME------------------------------------------------
 //When called, resets level, hides the start button, and calls function startGame
 $('#start').click(function () {
     reset();
+    pattern = [];
     $("#start").hide(); //hides start button on click
+
     startGame();
 });
 //Function calls addPattern and startSimon
@@ -93,7 +95,6 @@ function gameOver() {
     $("#gameover").removeAttr("hidden");
     $("#dialog").dialog("open");
     $("#start").show(2000);//start button reappears when game over
-    pattern = [];
     level = level - 1;
 }
 
@@ -224,6 +225,24 @@ $('#bart').click(function () {
         });
     });
 });
+
+
+// //Ryan's enabling/disabling userClicks
+// function enableUserInput() {
+// // handle the user input when they click a square
+//     $('div').click(function() {
+// // animate the specific button the user clicked
+//         animate($(this));
+//
+// // compare user input to all of simon's choices in order
+//         compare($(this).attr("class"));
+//
+//     });
+// }
+//
+// function disableUserInput() {
+//     $("div").off('click');
+// }
 
 //----------------------------------------------CURSOR---------------------------------
 var colour = "#7CCDE4";

@@ -16,8 +16,8 @@ Every time you complete a sequence, the next level starts and another Simpson is
 
 You'll see your final score, and then restart the game by pressing start button again and enjoy!
 
-On clicking the start button, and the Simpsons squares, you'll hear sound clips from all your favorite characters.  Enjoy a big flashing Mr. Sparkle background and
-a sparkle cursor effect.
+On clicking the start button, and the Simpsons squares, you'll hear sound clips from all your favorite characters.  When you click on the Simpsons squares,
+a donut appears behind the characters.  Enjoy a big flashing Mr. Sparkle background and a sparkle cursor effect.
 
 
 
